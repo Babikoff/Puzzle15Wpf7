@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Puzzle15.Wpf.Cell"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100" MouseDown="UserControl_MouseDown">
+    <Grid>
+        <Border BorderThickness="1" Background="White" CornerRadius="10">
+            <Grid>
+                <!--<Image Source="/Puzzle15Wpf;component/Images/Themes/Normal/2.png" />-->
+                <Viewbox>
+                    <Grid>
+                        <Viewbox Stretch="Uniform" 
+                                 Panel.ZIndex="1" 
+                                 Opacity="0.8">
+                            <Label Name="NumberLabel"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center" 
+                                FontSize="10" 
+                                VerticalContentAlignment="Center" 
+                                HorizontalContentAlignment="Stretch" 
+                                Padding="2" Foreground="#FF1F5269">?</Label>
+                        </Viewbox>
+                        <Image Name="Image" 
+                               Stretch="Fill" 
+                               Panel.ZIndex="0" />
+                    </Grid>
+                </Viewbox>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

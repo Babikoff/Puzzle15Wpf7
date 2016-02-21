@@ -1,0 +1,4 @@
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Interfaces\bin\Debug\Puzzle15.Interfaces.dll
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Interfaces\bin\Debug\Puzzle15.Interfaces.pdb
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Interfaces\obj\Debug\Puzzle15.Interfaces.dll
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Interfaces\obj\Debug\Puzzle15.Interfaces.pdb
