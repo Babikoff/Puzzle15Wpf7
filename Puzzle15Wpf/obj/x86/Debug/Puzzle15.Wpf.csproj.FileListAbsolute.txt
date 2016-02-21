@@ -1,0 +1,16 @@
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\bin\Debug\Puzzle15.exe
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\bin\Debug\Puzzle15.pdb
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\bin\Debug\Puzzle15.Interfaces.dll
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\bin\Debug\Puzzle15.Interfaces.pdb
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.Wpf.csprojResolveAssemblyReference.cache
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Cell.baml
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\MainWindow.baml
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Cell.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\MainWindow.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\App.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15_MarkupCompile.cache
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.g.resources
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.Wpf.Properties.Resources.resources
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.Wpf.csproj.GenerateResource.Cache
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.exe
+C:\Work\C#\Games\15\Puzzle15Wpf6\Puzzle15Wpf\obj\x86\Debug\Puzzle15.pdb
