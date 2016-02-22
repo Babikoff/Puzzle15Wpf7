@@ -22,9 +22,11 @@ namespace Puzzle15.Wpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IView
     {
         private readonly DispatcherTimer _timer;
+        int _cellWidth = 0;
+        int _cellHeight = 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propName)
@@ -45,20 +47,20 @@ namespace Puzzle15.Wpf
             _timer.Interval = new TimeSpan(0, 0, 0, 1);
         }
 
+        ICell IView.CreateCell(int cellNumber, int cellIndex, bool isEmptyCell)
+        {
+            var cell = new Cell(cellNumber, cellIndex, _cellWidth, _cellHeight, isEmptyCell);
+            (cell as ICell).ManipulationEvent += (sender, args) => OnCellClick(sender);
+            ContentPanel.Children.Add(cell);
+            return cell;
+        }
+
         void CreateCells(int size)
         {
-            _model.Init(size);
-
-            var cellWidth = (int)((GameAreaBorder.ActualWidth / _model._columns) * 0.95);
-            var cellHeight = (int)((GameAreaBorder.ActualHeight / _model._rows) * 0.95);
             ContentPanel.Children.Clear();
-            for (int i = 0; i < _model._cells; i++)
-            {
-                //TODO: определеться, кто должен создавать Cell (View, Model или кто?)
-                var cell = new Cell(i + 1, i, cellWidth, cellHeight, i + 1 == _model._cells);
-                (cell as ICell).ManipulationEvent += (sender, args) => OnCellClick(sender);
-                ContentPanel.Children.Add(cell);    
-            }
+            _cellWidth = (int)((GameAreaBorder.ActualWidth / size) * 0.95);
+            _cellHeight = (int)((GameAreaBorder.ActualHeight / size) * 0.95);
+            _model.Init(size, this);
         }
 
         void TimerTick(object sender, EventArgs e)
@@ -79,14 +81,8 @@ namespace Puzzle15.Wpf
         {
             _model.NewGame();
             
-            txtMoves.Text = _model._moves.ToString();
+            txtMoves.Text = _model.Moves.ToString();
             txtTime.Text = Const.DefaultTimeValue;
-
-            Scrambles();
-            while (!CheckIfSolvable())
-            {
-                Scrambles();
-            }
 
             _startTime = DateTime.Now.AddSeconds(1);
             _timer.Start();
@@ -105,121 +101,22 @@ namespace Puzzle15.Wpf
             }
         }
 
-        /// <summary>
-        /// Find the cell with a specific number
-        /// </summary>
-        ICell FindCellByNumber(int cellNum)
-        {
-            return ContentPanel.Children.OfType<ICell>().FirstOrDefault(c => c.CellNumber == cellNum);
-        }
+        ///// <summary>
+        ///// Each move the user do, perform a loop and checks values from 1 to _cells.
+        ///// if the numbers are not in the correct order than nothing happed.
+        ///// </summary>
+        //void CheckBoard()
+        //{
+        //    var index = 1;
+        //    for (var i = _model.Cells - 1; i > 0; i--)
+        //    {
+        //        if (FindItemValueByPosition(i) != index) return;
+        //        index++;
+        //    }
 
-        /// <summary>
-        /// Find the position of stackpanel without children.
-        /// </summary>
-        /// <returns></returns>
-        int FindEmptyItemPosition()
-        {
-            for (int i = 0; i < _model._cells; i++)
-            {
-                if (((ICell)ContentPanel.Children[i]).IsEmptyCell)
-                    return i;
-            }
-            return 0;
-        }
-
-        bool AreCellsOrdered
-        {
-            get 
-            { 
-                foreach (var cell in ContentPanel.Children)
-                {
-                    var iCell = cell as ICell;
-                    if (iCell == null)
-                    {
-                        return false;
-                    }
-                    if (iCell.CellIndex + 1 != iCell.CellNumber)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Get the Tag value by StackPanel position.
-        /// </summary>
-        /// <param name="position">position of StackPanel</param>
-        /// <returns>The Grid Tag value, if there is no Grids then returns - _cells</returns>
-        int FindItemValueByPosition(int position)
-        {
-            return ((ICell)ContentPanel.Children[position]).IsEmptyCell ?
-                Convert.ToInt32(((ICell)ContentPanel.Children[position]).CellNumber) : _model._cells;
-        } 
-
-        /// <summary>
-        /// Runs n times and generate random numbers from 1 to _cells, for each number find the current stackpanel that hold him.(FindStackPanelByTagId)
-        /// If First and Second number are smaller then _cells then - swipe the Grids and tag values.
-        /// If One of the values is _cells the swipe  - One Spackpanel will be cleared of Items.
-        /// </summary>
-        void Scrambles()
-        {
-            var count = 0;
-            while (count < 25)
-            {
-                var a = _model._rnd.Next(1, _model._cells + 1);
-                var b = _model._rnd.Next(1, _model._cells + 1);
-
-                if (a == b) continue;
-
-                var cell1 = FindCellByNumber(a);
-                var cell2 = FindCellByNumber(b);
-                cell1.SwapWith(cell2);
-                count++;
-            }
-        }
-
-        /// <summary>
-        /// Each move the user do, perform a loop and checks values from 1 to _cells.
-        /// if the numbers are not in the correct order than nothing happed.
-        /// </summary>
-        void CheckBoard()
-        {
-            var index = 1;
-            for (var i = _model._cells - 1; i > 0; i--)
-            {
-                if (FindItemValueByPosition(i) != index) return;
-                index++;
-            }
-
-            _timer.Stop();
-            WinGrid.Visibility = System.Windows.Visibility.Visible;
-        }
-
-        /// <summary>
-        /// Check if the current Scramble is solveable.
-        /// </summary>
-        /// <returns></returns>
-        bool CheckIfSolvable()
-        {
-            var n = 0;
-            for (var i = 1; i < _model._cells; i++)
-            {
-                if (!(ContentPanel.Children[i] is ICell)) continue;
-
-                var num1 = FindItemValueByPosition(i);
-                var num2 = FindItemValueByPosition(i - 1);
-
-                if (num1 > num2)
-                {
-                    n++;
-                }
-            }
-
-            var emptyPos = FindEmptyItemPosition();
-            return n % 2 == (emptyPos + emptyPos / _model._columns) % 2 ? true : false;
-        }
+        //    _timer.Stop();
+        //    WinGrid.Visibility = System.Windows.Visibility.Visible;
+        //}
 
         /// <summary>
         /// Click Event on all Grids,
@@ -237,14 +134,14 @@ namespace Puzzle15.Wpf
 
             if (to != null)
             {
-                _model._moves++;
-                txtMoves.Text = _model._moves.ToString();
+                _model.Moves++;
+                txtMoves.Text = _model.Moves.ToString();
                 item.SwapWith(to);
                 //MoveItem(item, to);
-                CheckBoard();
+                //CheckBoard();
             }
 
-            if (AreCellsOrdered)
+            if (_model.AreCellsOrdered)
             {
                 EndOfGame();
             }
@@ -259,7 +156,7 @@ namespace Puzzle15.Wpf
         {
             if (AllowAnyMovementCheckBox.IsChecked.HasValue && AllowAnyMovementCheckBox.IsChecked.Value)
             {
-                return ContentPanel.Children[FindEmptyItemPosition()] as ICell;
+                return ContentPanel.Children[_model.FindEmptyItemPosition()] as ICell;
             }
 
             if (cellToMove.IsEmptyCell)
@@ -269,7 +166,7 @@ namespace Puzzle15.Wpf
 
             int i = cellToMove.CellIndex;
 
-            if (!_model.IsBorderSwich(i, i + 1) && i + 1 < _model._cells &&
+            if (!_model.IsBorderSwich(i, i + 1) && i + 1 < _model.Cells &&
                 ((ICell)ContentPanel.Children[i + 1]).IsEmptyCell)
             {
                 return (ICell)(ContentPanel.Children[i + 1]);
@@ -282,16 +179,16 @@ namespace Puzzle15.Wpf
                 return (ICell)(ContentPanel.Children[i - 1]);
             }
 
-            if (i + _model._columns <= _model._cells - 1 &&
-                ((ICell)ContentPanel.Children[i + _model._columns]).IsEmptyCell)
+            if (i + _model.Columns <= _model.Cells - 1 &&
+                ((ICell)ContentPanel.Children[i + _model.Columns]).IsEmptyCell)
             {
-                return (ICell)(ContentPanel.Children[i + _model._columns]);
+                return (ICell)(ContentPanel.Children[i + _model.Columns]);
             }
 
-            if (i - _model._columns > -1 &&
-                ((ICell)ContentPanel.Children[i - _model._columns]).IsEmptyCell)
+            if (i - _model.Columns > -1 &&
+                ((ICell)ContentPanel.Children[i - _model.Columns]).IsEmptyCell)
             {
-                return (ICell)(ContentPanel.Children[i - _model._columns]);
+                return (ICell)(ContentPanel.Children[i - _model.Columns]);
             }
 
             return null;
@@ -307,9 +204,9 @@ namespace Puzzle15.Wpf
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!_model._firstLoad) return;
+            if (!_model.FirstLoad) return;
 
-            _model._firstLoad = false;
+            _model.FirstLoad = false;
             //CreateCells(3);
 
             GridScrambling.Visibility = System.Windows.Visibility.Visible;
@@ -357,16 +254,15 @@ namespace Puzzle15.Wpf
             var pictureFilePath = GetPictureFilePath();
             var bitmapImage = new BitmapImage(new Uri(pictureFilePath));
             PreviewImage.Source = bitmapImage;
-            LoadImagetoCells(bitmapImage);
+            LoadImageToCells(bitmapImage);
         }
 
-        private void LoadImagetoCells(BitmapImage bitmapImage)
+        //TODO: в Controller
+        private void LoadImageToCells(BitmapImage bitmapImage)
         {
-            var cellSize = Math.Min(bitmapImage.PixelHeight / _model._rows, bitmapImage.PixelWidth / _model._columns);
+            var cellSize = Math.Min(bitmapImage.PixelHeight / _model.Rows, bitmapImage.PixelWidth / _model.Columns);
             var cellBitMapHeight = cellSize;
             var cellBitMapWidth = cellSize;
-            //var cellBitMapHeight = bitmapImage.PixelHeight / _rows;
-            //var cellBitMapWidth = bitmapImage.PixelWidth / _columns;
 
             // Calculate stride of source
             int stride = bitmapImage.PixelWidth * (bitmapImage.Format.BitsPerPixel / 8);
@@ -374,12 +270,12 @@ namespace Puzzle15.Wpf
             byte[] data = new byte[stride * bitmapImage.PixelHeight];
 
             int cellNum = 0;
-            for (int i = 0; i < _model._columns; i++)
+            for (int i = 0; i < _model.Columns; i++)
             {
-                for (int j = 0; j < _model._rows; j++)
+                for (int j = 0; j < _model.Rows; j++)
                 {
                     cellNum++;
-                    var cell = FindCellByNumber(cellNum);
+                    var cell = _model.FindCellByNumber(cellNum);
 
                     if (cell.IsEmptyCell) continue;
 
@@ -443,7 +339,6 @@ namespace Puzzle15.Wpf
 
             return null;
         }
-
 
     }
 }

@@ -7,5 +7,6 @@ namespace Puzzle15.Interfaces
 {
     public interface IView
     {
+        ICell CreateCell(int cellNumber, int cellIndex, bool isEmptyCell);
     }
 }

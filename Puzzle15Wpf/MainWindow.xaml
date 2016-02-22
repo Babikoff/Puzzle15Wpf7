@@ -57,6 +57,7 @@
                             <ComboBoxItem Tag="3">3 на 3</ComboBoxItem>
                             <ComboBoxItem Tag="4">4 на 4</ComboBoxItem>
                             <ComboBoxItem Tag="5">5 на 5</ComboBoxItem>
+                            <ComboBoxItem Tag="6">6 на 6</ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
                 </StackPanel>
@@ -94,16 +95,6 @@
             </Border>
 
             <Grid x:Name="GridScrambling" Height="35" Margin="168,256,134,0" VerticalAlignment="Top" Grid.ColumnSpan="3">
-                
-                
-                <Rectangle x:Name="rectangle" RenderTransformOrigin="0.5,0.5" Margin="-29.648,15.704,-26.648,-83.296" UseLayoutRounding="False" StrokeThickness="0">
-                    <Rectangle.Fill>
-                        <ImageBrush Stretch="Fill" ImageSource="Board.png"/>
-                    </Rectangle.Fill>
-                    <!--<Rectangle.RenderTransform>
-                        <CompositeTransform Rotation="-0.599"/>
-                    </Rectangle.RenderTransform>-->
-                </Rectangle>
                 <TextBlock x:Name="textBlock3" Text="Scrambling..." FontSize="26" Margin="8,-4,0,-5" Foreground="Black" FontWeight="Bold" />
                 <TextBlock x:Name="textBlock3_Copy" Text="Scrambling..." FontSize="26" Margin="7,-5,1,-4" Foreground="Black" FontWeight="Bold" />
                 <TextBlock x:Name="textBlock3_Copy1" Text="Scrambling..." FontSize="26" Margin="7,-3,1,-6" Foreground="Black" FontWeight="Bold" />
