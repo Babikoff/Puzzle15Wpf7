@@ -10,16 +10,18 @@ namespace Puzzle15.Interfaces
         int Rows { get; set; }
         int Columns { get; set; }
         int Cells { get; set; }
-        int Moves { get; set; }
+        int Moves { get; }
         bool FirstLoad { get; set; }
-        bool IsBorderSwich(int a, int b);
+        bool IsBorderSwitch(int a, int b);
         bool AreCellsOrdered { get; }
+        bool IsAnyMovementAllowed { get; set; }
 
         void NewGame();
         void Init(int gameAreaSize, IView view);
         void Scrambles();
-
-        int FindEmptyItemPosition();
         ICell FindCellByNumber(int cellNum);
+        ICell CanMove(ICell cellToMove);
+
+        void Swap(ICell item, ICell to);
     }
 }

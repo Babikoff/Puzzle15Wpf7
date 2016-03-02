@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Puzzle15.Wpf.Cell"
+﻿<UserControl x:Class="Puzzle15.Wpf.CellViewControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,7 +11,8 @@
                 <!--<Image Source="/Puzzle15Wpf;component/Images/Themes/Normal/2.png" />-->
                 <Viewbox>
                     <Grid>
-                        <Viewbox Stretch="Uniform" 
+                        <Viewbox Name="NumberView"
+                                 Stretch="Uniform" 
                                  Panel.ZIndex="1" 
                                  Opacity="0.8">
                             <Label Name="NumberLabel"
@@ -22,7 +23,7 @@
                                 HorizontalContentAlignment="Stretch" 
                                 Padding="2" Foreground="#FF1F5269">?</Label>
                         </Viewbox>
-                        <Image Name="Image" 
+                        <Image Name="ImageView" 
                                Stretch="Fill" 
                                Panel.ZIndex="0" />
                     </Grid>

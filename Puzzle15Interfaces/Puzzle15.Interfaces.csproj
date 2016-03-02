@@ -35,12 +35,16 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Delegates.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="ICell.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IView.cs" />

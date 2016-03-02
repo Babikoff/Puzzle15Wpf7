@@ -15,6 +15,7 @@ namespace Puzzle15.Interfaces
         bool IsEmptyCell { get; set; }
         int CellIndex { get; }
         ImageSource Picture { get; set; }
+        ShowCellModeEnum ShowCellMode { get; set; }
 
         event EventHandler<EventArgs> ManipulationEvent;
     }

@@ -18,21 +18,22 @@ namespace Puzzle15.Wpf
     /// <summary>
     /// Interaction logic for Cell.xaml
     /// </summary>
-    public partial class Cell : UserControl, ICell
+    public partial class CellViewControl : UserControl, ICell
     {
         int _сellNumber = 0;
         bool _isEmptyCell;
         ImageSource _picture = null;
+        ShowCellModeEnum _showCellMode = ShowCellModeEnum.DigitsAndPictures;
 
         public event EventHandler<EventArgs> ManipulationEvent;
 
-        public Cell()
+        public CellViewControl()
         {
             InitializeComponent();
             CellNumber = 1;
         }
 
-        public Cell(int cellNumber, int cellIndex, int width, int height, bool isEmptyCell)
+        public CellViewControl(int cellNumber, int cellIndex, int width, int height, bool isEmptyCell)
             : this()
         {
             _isEmptyCell = isEmptyCell;
@@ -66,7 +67,39 @@ namespace Puzzle15.Wpf
             set
             {
                 _picture = value;
-                Image.Source = _picture;
+                ImageView.Source = _picture;
+            }
+        }
+
+        public ShowCellModeEnum ShowCellMode
+        {
+            get
+            {
+                return _showCellMode;
+            }
+            set
+            {
+                if (_showCellMode != value)
+                {
+                    _showCellMode = value;
+
+                    switch (_showCellMode)
+                    {
+                        case ShowCellModeEnum.DigitsOnly:
+                            ImageView.Visibility = System.Windows.Visibility.Hidden;
+                            NumberView.Visibility = System.Windows.Visibility.Visible;
+                            break;
+                        case ShowCellModeEnum.PicturesOnly:
+                            ImageView.Visibility = System.Windows.Visibility.Visible;
+                            NumberView.Visibility = System.Windows.Visibility.Hidden;
+                            break;
+                        case ShowCellModeEnum.DigitsAndPictures:
+                        default:
+                            ImageView.Visibility = System.Windows.Visibility.Visible;
+                            NumberView.Visibility = System.Windows.Visibility.Visible;
+                            break;
+                    }
+                }
             }
         }
 

@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using Puzzle15.Interfaces;
 
-namespace Puzzle15.Wpf
+namespace Puzzle15.Model
 {
-    internal class Model: IModel
+    public class Model: IModel
     {
         private int[] _bordersNums; //= { 0, 4, 8, 12, 3, 7, 11, 15 };
-
+        private int _moves;
         public Random _rnd { get; set; }
 
         public bool FirstLoad { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }
         public int Cells { get; set; }
-        public int Moves { get; set; }
+        public int Moves { get { return _moves; } }
 
         private List<ICell> _cells = new List<ICell>();
 
@@ -55,7 +55,7 @@ namespace Puzzle15.Wpf
 
         public void NewGame()
         {
-            Moves = 0;
+            _moves = 0;
             Scrambles();
             while (!CheckIfSolvable())
             {
@@ -91,7 +91,7 @@ namespace Puzzle15.Wpf
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public bool IsBorderSwich(int a, int b)
+        public bool IsBorderSwitch(int a, int b)
         {
             return _bordersNums.Contains(a) && _bordersNums.Contains(b);
         }
@@ -108,7 +108,7 @@ namespace Puzzle15.Wpf
         /// Find the position of stackpanel without children.
         /// </summary>
         /// <returns></returns>
-        public int FindEmptyItemPosition()
+        private int FindEmptyItemPosition()
         {
             for (int i = 0; i < Cells; i++)
             {
@@ -118,7 +118,9 @@ namespace Puzzle15.Wpf
             return 0;
         }
 
-        bool IModel.AreCellsOrdered
+        public bool IsAnyMovementAllowed { get; set; }
+
+        public bool AreCellsOrdered
         {
             get
             {
@@ -166,5 +168,54 @@ namespace Puzzle15.Wpf
             }
         }
 
+        /// <summary>
+        /// Check if the Item Can move, Checking all panels around the specific item with -1 +1 -4 +4, if one of them is empty then he can move.
+        /// </summary>
+        /// <param name="cellToMove">The Item that has been click by user.</param>
+        /// <returns></returns>
+        public ICell CanMove(ICell cellToMove)
+        {
+            if (IsAnyMovementAllowed)
+            {
+                return _cells[FindEmptyItemPosition()];
+            }
+
+            if (cellToMove.IsEmptyCell)
+            {
+                return null;
+            }
+
+            int i = cellToMove.CellIndex;
+
+            if (!IsBorderSwitch(i, i + 1) && (i + 1 < Cells) &&
+                (_cells[i + 1]).IsEmptyCell)
+            {
+                return _cells[i + 1];
+            }
+
+            if (!IsBorderSwitch(i, i - 1) && (i - 1 > -1) && _cells[i - 1].IsEmptyCell)
+            {
+                return _cells[i - 1];
+            }
+
+            if (i + Columns <= Cells - 1 && _cells[i + Columns].IsEmptyCell)
+            {
+                return _cells[i + Columns];
+            }
+
+            if (i - Columns > -1 && _cells[i - Columns].IsEmptyCell)
+            {
+                return _cells[i - Columns];
+            }
+
+            return null;
+        }
+
+
+        public void Swap(ICell item, ICell to)
+        {
+            item.SwapWith(to);
+            _moves++;
+        }
     }
 }

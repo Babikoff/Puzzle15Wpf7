@@ -22,11 +22,9 @@ namespace Puzzle15.Wpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IView
+    public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _timer;
-        int _cellWidth = 0;
-        int _cellHeight = 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propName)
@@ -35,32 +33,33 @@ namespace Puzzle15.Wpf
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
 
-        private IModel _model = new Model();
+        private IModel _model;
+        private IView _view;
         private DateTime _startTime;
+
+        //Model is public for WPF binding.
+        public IModel Model
+        {
+            get { return _model; }
+        }
+
+        //View is public for WPF binding.
+        public IView View
+        {
+            get { return _view; }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+            _model = new Puzzle15.Model.Model();
+            this.GameFieldViewControl.Model = _model;
+            _view = this.GameFieldViewControl;
+            _view.GameEpilogFinishedEvent += delegate() { NewGame(); };
 
             _timer = new DispatcherTimer();
             _timer.Tick += new EventHandler(TimerTick);
             _timer.Interval = new TimeSpan(0, 0, 0, 1);
-        }
-
-        ICell IView.CreateCell(int cellNumber, int cellIndex, bool isEmptyCell)
-        {
-            var cell = new Cell(cellNumber, cellIndex, _cellWidth, _cellHeight, isEmptyCell);
-            (cell as ICell).ManipulationEvent += (sender, args) => OnCellClick(sender);
-            ContentPanel.Children.Add(cell);
-            return cell;
-        }
-
-        void CreateCells(int size)
-        {
-            ContentPanel.Children.Clear();
-            _cellWidth = (int)((GameAreaBorder.ActualWidth / size) * 0.95);
-            _cellHeight = (int)((GameAreaBorder.ActualHeight / size) * 0.95);
-            _model.Init(size, this);
         }
 
         void TimerTick(object sender, EventArgs e)
@@ -68,6 +67,24 @@ namespace Puzzle15.Wpf
             var time = DateTime.Now - _startTime;
             txtTime.Text = string.Format(Const.TimeFormat, time.Hours, time.Minutes, time.Seconds);
         }
+
+        //#region interface IView
+        //ICell IView.CreateCell(int cellNumber, int cellIndex, bool isEmptyCell)
+        //{
+        //    var cell = new CellViewControl(cellNumber, cellIndex, _cellWidth, _cellHeight, isEmptyCell);
+        //    (cell as ICell).ManipulationEvent += (sender, args) => OnCellClick(sender);
+        //    ContentPanel.Children.Add(cell);
+        //    return cell;
+        //}
+        //#endregion
+
+        //void CreateCells(int size)
+        //{
+        //    ContentPanel.Children.Clear();
+        //    _cellWidth = (int)((GameAreaBorder.ActualWidth / size) * 0.95);
+        //    _cellHeight = (int)((GameAreaBorder.ActualHeight / size) * 0.95);
+        //    _model.Init(size, this);
+        //}
 
         /// <summary>
         /// The Range of all Stackpanels is between 15 and 0, when 15 is the first (top left) and 0 is last (right bottom).
@@ -86,19 +103,17 @@ namespace Puzzle15.Wpf
 
             _startTime = DateTime.Now.AddSeconds(1);
             _timer.Start();
-
-            GridScrambling.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void EndOfGame()
         {
             _timer.Stop();
-
-            var storyboard = this.GameAreaBorder.FindResource("BlinkStoryboard") as Storyboard;
-            if (storyboard != null)
-            {
-                storyboard.Begin();
-            }
+            _view.EndOfGame();
+            //var storyboard = this.GameAreaBorder.FindResource("BlinkStoryboard") as Storyboard;
+            //if (storyboard != null)
+            //{
+            //    storyboard.Begin();
+            //}
         }
 
         ///// <summary>
@@ -118,201 +133,112 @@ namespace Puzzle15.Wpf
         //    WinGrid.Visibility = System.Windows.Visibility.Visible;
         //}
 
-        /// <summary>
-        /// Click Event on all Grids,
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnCellClick(object sender)
-        {
-            var item = sender as ICell;// (UIElement)e.OriginalSource;
+        ///// <summary>
+        ///// Click Event on all Grids,
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void OnCellClick(object sender)
+        //{
+        //    var item = sender as ICell;// (UIElement)e.OriginalSource;
 
-            if (item == null) return;
-            //if (!(item is Grid)) return;
+        //    if (item == null) return;
+        //    //if (!(item is Grid)) return;
 
-            var to = CanMove(item);
+        //    var to = CanMove(item);
 
-            if (to != null)
-            {
-                _model.Moves++;
-                txtMoves.Text = _model.Moves.ToString();
-                item.SwapWith(to);
-                //MoveItem(item, to);
-                //CheckBoard();
-            }
+        //    if (to != null)
+        //    {
+        //        _model.Moves++;
+        //        txtMoves.Text = _model.Moves.ToString();
+        //        item.SwapWith(to);
+        //        //MoveItem(item, to);
+        //        //CheckBoard();
+        //    }
 
-            if (_model.AreCellsOrdered)
-            {
-                EndOfGame();
-            }
-        }
+        //    if (_model.AreCellsOrdered)
+        //    {
+        //        EndOfGame();
+        //    }
+        //}
 
-        /// <summary>
-        /// Check if the Item Can move, Checking all panels around the specific item with -1 +1 -4 +4, if one of them is empty then he can move.
-        /// </summary>
-        /// <param name="cellToMove">The Item that has been click by user.</param>
-        /// <returns></returns>
-        ICell CanMove(ICell cellToMove)
-        {
-            if (AllowAnyMovementCheckBox.IsChecked.HasValue && AllowAnyMovementCheckBox.IsChecked.Value)
-            {
-                return ContentPanel.Children[_model.FindEmptyItemPosition()] as ICell;
-            }
+        ///// <summary>
+        ///// Check if the Item Can move, Checking all panels around the specific item with -1 +1 -4 +4, if one of them is empty then he can move.
+        ///// </summary>
+        ///// <param name="cellToMove">The Item that has been click by user.</param>
+        ///// <returns></returns>
+        //ICell CanMove(ICell cellToMove)
+        //{
+        //    if (AllowAnyMovementCheckBox.IsChecked.HasValue && AllowAnyMovementCheckBox.IsChecked.Value)
+        //    {
+        //        return ContentPanel.Children[_model.FindEmptyItemPosition()] as ICell;
+        //    }
 
-            if (cellToMove.IsEmptyCell)
-            {
-                return null;
-            }
+        //    if (cellToMove.IsEmptyCell)
+        //    {
+        //        return null;
+        //    }
 
-            int i = cellToMove.CellIndex;
+        //    int i = cellToMove.CellIndex;
 
-            if (!_model.IsBorderSwich(i, i + 1) && i + 1 < _model.Cells &&
-                ((ICell)ContentPanel.Children[i + 1]).IsEmptyCell)
-            {
-                return (ICell)(ContentPanel.Children[i + 1]);
-            }
+        //    if (!_model.IsBorderSwich(i, i + 1) && i + 1 < _model.Cells &&
+        //        ((ICell)ContentPanel.Children[i + 1]).IsEmptyCell)
+        //    {
+        //        return (ICell)(ContentPanel.Children[i + 1]);
+        //    }
 
-            if (!_model.IsBorderSwich(i, i - 1) &&
-                i - 1 > -1 &&
-                ((ICell)ContentPanel.Children[i - 1]).IsEmptyCell)
-            {
-                return (ICell)(ContentPanel.Children[i - 1]);
-            }
+        //    if (!_model.IsBorderSwich(i, i - 1) &&
+        //        i - 1 > -1 &&
+        //        ((ICell)ContentPanel.Children[i - 1]).IsEmptyCell)
+        //    {
+        //        return (ICell)(ContentPanel.Children[i - 1]);
+        //    }
 
-            if (i + _model.Columns <= _model.Cells - 1 &&
-                ((ICell)ContentPanel.Children[i + _model.Columns]).IsEmptyCell)
-            {
-                return (ICell)(ContentPanel.Children[i + _model.Columns]);
-            }
+        //    if (i + _model.Columns <= _model.Cells - 1 &&
+        //        ((ICell)ContentPanel.Children[i + _model.Columns]).IsEmptyCell)
+        //    {
+        //        return (ICell)(ContentPanel.Children[i + _model.Columns]);
+        //    }
 
-            if (i - _model.Columns > -1 &&
-                ((ICell)ContentPanel.Children[i - _model.Columns]).IsEmptyCell)
-            {
-                return (ICell)(ContentPanel.Children[i - _model.Columns]);
-            }
+        //    if (i - _model.Columns > -1 &&
+        //        ((ICell)ContentPanel.Children[i - _model.Columns]).IsEmptyCell)
+        //    {
+        //        return (ICell)(ContentPanel.Children[i - _model.Columns]);
+        //    }
 
-            return null;
-        }
-
-        private void BtnNoThanksManipulationStarted(object sender, ManipulationStartedEventArgs e)
-        {
-            WinGrid.Visibility = System.Windows.Visibility.Collapsed;
-            NewGame();
-            e.Handled = true;
-            e.Complete();
-        }
+        //    return null;
+        //}
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (!_model.FirstLoad) return;
-
             _model.FirstLoad = false;
-            //CreateCells(3);
 
-            GridScrambling.Visibility = System.Windows.Visibility.Visible;
-            GameFieldSizeComboBox.SelectedIndex = 0;
+            GameFieldSizeComboBox.SelectedIndex = 1;
         }
 
-        private void BtnHelpClick(object sender, EventArgs e)
-        {
-            //NavigationService.Navigate(new Uri("/Help.xaml", UriKind.Relative));
-        }
-
-        private void BtnPlayClick(object sender, EventArgs e)
-        {
-            GridScrambling.Visibility = System.Windows.Visibility.Visible;
-            NewGame();
-        }
-
-        private void BtnAboutClick(object sender, EventArgs e)
-        {
-            //NavigationService.Navigate(new Uri("/About.xaml", UriKind.Relative));
-        }
-
-        private void BtnSettingsClick(object sender, EventArgs e)
-        {
-            //NavigationService.Navigate(new Uri("/Settings.xaml", UriKind.Relative));
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void GameFieldSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var comboBox = sender as ComboBox;
             if (comboBox != null)
             {
-                CreateCells((int)comboBox.SelectedIndex + 3);
+                int size = 3;
+                int.TryParse((comboBox.SelectedItem as ComboBoxItem).Tag.ToString(), out size);
+                _view.CreateCells(size);
                 NewGame();
             }
         }
 
-        private void Storyboard_Completed(object sender, EventArgs e)
-        {
-            NewGame();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        //TODO: в Controller
+        private void LoadPictureButton_Click(object sender, RoutedEventArgs e)
         {
             var pictureFilePath = GetPictureFilePath();
+            if (string.IsNullOrEmpty(pictureFilePath)) return;
+            
             var bitmapImage = new BitmapImage(new Uri(pictureFilePath));
             PreviewImage.Source = bitmapImage;
-            LoadImageToCells(bitmapImage);
-        }
-
-        //TODO: в Controller
-        private void LoadImageToCells(BitmapImage bitmapImage)
-        {
-            var cellSize = Math.Min(bitmapImage.PixelHeight / _model.Rows, bitmapImage.PixelWidth / _model.Columns);
-            var cellBitMapHeight = cellSize;
-            var cellBitMapWidth = cellSize;
-
-            // Calculate stride of source
-            int stride = bitmapImage.PixelWidth * (bitmapImage.Format.BitsPerPixel / 8);
-            // Create data array to hold source pixel data
-            byte[] data = new byte[stride * bitmapImage.PixelHeight];
-
-            int cellNum = 0;
-            for (int i = 0; i < _model.Columns; i++)
-            {
-                for (int j = 0; j < _model.Rows; j++)
-                {
-                    cellNum++;
-                    var cell = _model.FindCellByNumber(cellNum);
-
-                    if (cell.IsEmptyCell) continue;
-
-                    // Copy source image pixels to the data array
-                    bitmapImage.CopyPixels(
-                        new Int32Rect(
-                            j * cellBitMapWidth,
-                            i * cellBitMapHeight,
-                            cellBitMapWidth,
-                            cellBitMapHeight
-                            ), 
-                            data, 
-                            stride,
-                            0
-                            );
-                    // Create WriteableBitmap to copy the pixel data to.      
-                    WriteableBitmap target = new WriteableBitmap(
-                      cellBitMapWidth,
-                      cellBitMapWidth,
-                      bitmapImage.DpiX, 
-                      bitmapImage.DpiY,
-                      bitmapImage.Format, 
-                      null
-                      );
-
-                    // Write the pixel data to the WriteableBitmap.
-                    target.WritePixels(
-                      new Int32Rect(0, 0, cellBitMapWidth, cellBitMapWidth),
-                      data, 
-                      stride, 
-                      0
-                      );
-
-                    cell.Picture = target;
-                }
-            }
-
+            _view.LoadImageToCells(bitmapImage);
+            PicturePreviewPanel.Visibility = System.Windows.Visibility.Visible;
         }
 
         string GetPictureFilePath()
@@ -340,5 +266,34 @@ namespace Puzzle15.Wpf
             return null;
         }
 
+        #region Button press handlers
+        private void BtnNoThanksManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        {
+            WinGrid.Visibility = System.Windows.Visibility.Collapsed;
+            NewGame();
+            e.Handled = true;
+            e.Complete();
+        }
+
+        private void BtnHelpClick(object sender, EventArgs e)
+        {
+            //NavigationService.Navigate(new Uri("/Help.xaml", UriKind.Relative));
+        }
+
+        private void BtnPlayClick(object sender, EventArgs e)
+        {
+            NewGame();
+        }
+
+        private void BtnAboutClick(object sender, EventArgs e)
+        {
+            //NavigationService.Navigate(new Uri("/About.xaml", UriKind.Relative));
+        }
+
+        private void BtnSettingsClick(object sender, EventArgs e)
+        {
+            //NavigationService.Navigate(new Uri("/Settings.xaml", UriKind.Relative));
+        }
+        #endregion
     }
 }

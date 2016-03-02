@@ -19,9 +19,7 @@ C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\bin\Release\Puzzle15.p
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\bin\Release\Puzzle15.Interfaces.dll
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\bin\Release\Puzzle15.Interfaces.pdb
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15.Wpf.csprojResolveAssemblyReference.cache
-C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Cell.baml
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\MainWindow.baml
-C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Cell.g.cs
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\MainWindow.g.cs
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\App.g.cs
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15_MarkupCompile.cache
@@ -30,3 +28,11 @@ C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15.Wpf.csproj.GenerateResource.Cache
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15.exe
 C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15.pdb
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\bin\Release\Puzzle15.Model.dll
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\bin\Release\Puzzle15.Model.pdb
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\CellViewControl.baml
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\GameFieldViewControl.baml
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\CellViewControl.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\GameFieldViewControl.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\GeneratedInternalTypeHelper.g.cs
+C:\Work\C#\Games\15\Puzzle15Wpf7\Puzzle15Wpf7\Puzzle15Wpf\obj\x86\Release\Puzzle15_MarkupCompile.lref

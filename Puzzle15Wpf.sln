@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.Wpf", "Puzzle15Wpf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.Interfaces", "Puzzle15Interfaces\Puzzle15.Interfaces.csproj", "{8BC6063F-8736-4F09-AD19-14AFF006B31D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.Model", "Puzzle15.MVC\Puzzle15.Model.csproj", "{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{8BC6063F-8736-4F09-AD19-14AFF006B31D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8BC6063F-8736-4F09-AD19-14AFF006B31D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8BC6063F-8736-4F09-AD19-14AFF006B31D}.Release|x86.ActiveCfg = Release|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

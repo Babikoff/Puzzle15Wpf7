@@ -59,12 +59,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Cell.xaml.cs">
-      <DependentUpon>Cell.xaml</DependentUpon>
+    <Compile Include="CellViewControl.xaml.cs">
+      <DependentUpon>CellViewControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model.cs" />
+    <Compile Include="Converters\ShowCellModeConverter.cs" />
+    <Compile Include="GameFieldViewControl.xaml.cs">
+      <DependentUpon>GameFieldViewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Themes.cs" />
-    <Page Include="Cell.xaml">
+    <Page Include="CellViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameFieldViewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,6 +126,10 @@
     <Resource Include="Images\Menu\save.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Puzzle15.MVC\Puzzle15.Model.csproj">
+      <Project>{A01C35BB-7BD0-4480-BB9F-8D179A74B3FA}</Project>
+      <Name>Puzzle15.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Puzzle15Interfaces\Puzzle15.Interfaces.csproj">
       <Project>{8BC6063F-8736-4F09-AD19-14AFF006B31D}</Project>
       <Name>Puzzle15.Interfaces</Name>
